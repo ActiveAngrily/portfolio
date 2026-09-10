@@ -1,6 +1,6 @@
 # Portfolio
 
-A small, reference-inspired portfolio with a warm two-column layout, sample project pages, and a focus timer experiment. The left stage is intentionally empty so a future interactive element can have room to breathe.
+A small, reference-inspired portfolio for Anant Jamuar, with a warm two-column layout, project pages, and a focus timer experiment. The left stage is intentionally empty so a future interactive element can have room to breathe.
 
 ## Future plan: interactive square
 

@@ -1,8 +1,9 @@
-import { readFile, access } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const root = resolve('dist');
-const files = ['index.html', 'app.js', 'style.css'];
+const pages = ['me', 'contact', 'work/red-letter', 'work/crucible', 'work/curieon', 'work/latent-diffusion'];
+const files = ['index.html', 'app.js', 'style.css', ...pages.map((page) => `${page}/index.html`)];
 const source = await Promise.all(files.map((file) => readFile(resolve(root, file), 'utf8')));
 const combined = source.join('\n');
 
@@ -16,8 +17,8 @@ if (!html.includes('<aside class="desk"') || !html.includes('id="open-focus"') |
 }
 if (html.includes('id="open-studio"') || html.includes('id="character"')) throw new Error('removed controls are still present');
 
-for (const page of ['me', 'contact', 'work/document-workspace', 'work/developer-portal', 'work/form-builder']) {
-  await access(resolve(root, page, 'index.html'));
+for (const term of ['sample projects', 'illustrative portfolio content', 'contact details are being added', 'ready for your story']) {
+  if (combined.toLowerCase().includes(term)) throw new Error(`placeholder content remains: ${term}`);
 }
 
-console.log('Portfolio checks passed: clean shell, empty stage, focus dialog, and generated pages present.');
+console.log('Portfolio checks passed: Anant’s content, project pages, focus dialog, and clean shell are present.');
