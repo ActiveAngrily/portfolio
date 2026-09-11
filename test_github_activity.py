@@ -23,7 +23,7 @@ assert calls[1].startswith('user/repos?affiliation=owner&visibility=all&')
 assert snapshot['repositories'] == 102 and snapshot['stars'] == 202
 assert snapshot['days'][0]['date'] == days[0]['date']
 assert snapshot['annual_total'] == sum(d['contributionCount'] for d in days)
-assert 'Latest 26 weeks' in render(snapshot) and 'tabindex' not in render(snapshot)
+assert 'latest 26 weeks' in render(snapshot) and 'tabindex' not in render(snapshot)
 assert '@ActiveAngrily ↗' in render(snapshot) and 'Updated ' not in render(snapshot)
 invalid = dict(snapshot, days=[dict(d) for d in snapshot['days']])
 invalid['days'][1]['date'] = invalid['days'][0]['date']
@@ -38,10 +38,12 @@ def unavailable(token):
 with TemporaryDirectory() as folder:
     path = Path(folder) / 'activity.json'
     assert refresh(path, 'test', unavailable) is None
-    assert 'Activity unavailable' in render(None)
+    assert 'activity unavailable' in render(None)
     path.write_text(json.dumps(snapshot))
     original = path.read_text()
     assert refresh(path, 'test', unavailable) == snapshot
     assert path.read_text() == original
+    assert refresh(path, 'test', lambda _: (_ for _ in ()).throw(AssertionError('offline fetch')), offline=True) == snapshot
+    assert snapshot['days'][-1]['date'] in render(snapshot)
     assert refresh(path, 'test', lambda _: snapshot) == snapshot
 print('GitHub data checks passed: pagination, public/private ownership, forks, dates, and fallback.')

@@ -41,24 +41,23 @@ intermediate screens use 46/54, and mobile stacks the stage above the story.
 DM Sans, italic Instrument Serif, pale surfaces, and charcoal text carry through
 all pages. The card uses five stone-to-olive contribution levels, month markers,
 and annual contributions, public and private repository count, and stars received.
-Mobile shows the latest 26 weeks while retaining the annual total.
+Mobile and narrow desktop columns show the latest 26 weeks while retaining the annual total. The snapshot end date stays visible when refreshes fail.
 
-The four case studies use the same editorial structure: back link, category,
+The three published case studies use the same editorial structure: back link, category,
 title, introduction, role/dates and focus, project link or status, a specific
 visual, evidence, problem, engineering decisions, reflection, and next project.
 
-- `/work/red-letter/`: a newspaper masthead and discovery-to-report pipeline in
-  muted oxblood; 22 publishers, 46 entry points, and 8 personas.
-- `/work/crucible/`: an explicitly illustrative telemetry trace, 50-step window,
-  and three labelled risk levels in amber; 11 signals and under-15ms inference.
-- `/work/curieon/`: abstract record IDs in an illustrative severity queue in
-  blue-grey. “In progress” stays visible; no patient data or clinical results.
+- `/work/red-letter/`: the original newspaper masthead and a written case study; 22 publishers and 46 feeds.
+- `/work/crucible/`: the original December 2025 cover and a written case study; 11 signals and under-15ms inference.
+- Curieon stays visible as an unlinked “in the works” card until it is ready.
 - `/work/latent-diffusion/`: a short research abstract and the tools used to build
   the latent diffusion pipeline.
 
 ### Build and data
 
 Run `python3 build_pages.py` to refresh activity and regenerate detail pages.
+Use `python3 build_pages.py --offline` to reproduce pages from the saved snapshot without network access.
+`dist/index.html` is the authored homepage and shared shell; `dist/style.css` and `dist/app.js` are authored assets. Detail content comes from `build_pages.py`, `red_letter.html`, and `crucible.html`; regenerate the six detail pages after editing these sources.
 Supply `GH_TOKEN` or `GITHUB_TOKEN` through your build environment's secret store;
 do not put credentials in source files. For local builds, you can instead put only the token in `.github-token` at the repository root. This file is Git-ignored; environment variables take precedence. The build queries GitHub GraphQL for the
 account's contribution calendar and paginates all owned REST repositories.

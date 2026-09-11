@@ -58,13 +58,15 @@ def validate(data):
         raise ValueError('Contribution total does not match calendar')
 
 
-def refresh(path, token=None, fetch=fetch_snapshot):
+def refresh(path, token=None, fetch=fetch_snapshot, offline=False):
     previous = None
     try:
         previous = json.loads(path.read_text())
         validate(previous)
     except (OSError, ValueError, KeyError, TypeError, AssertionError):
         previous = None
+    if offline:
+        return previous
     token = token or os.getenv('GH_TOKEN') or os.getenv('GITHUB_TOKEN')
     if not token:
         try:
@@ -110,5 +112,5 @@ def calendar(days, mobile=False):
 def render(data):
     head = '<section class="activity-card" aria-labelledby="activity-title"><div class="activity-header"><h2 id="activity-title">a little work, every day</h2><a class="github-profile" href="https://github.com/ActiveAngrily" target="_blank" rel="noreferrer">@ActiveAngrily ↗</a></div>'
     if not data:
-        return head + '<p class="activity-unavailable">Activity unavailable</p><p class="activity-note">A little more of my work lives on GitHub.</p></section>'
-    return head + f'<p class="sr-only">{data["annual_total"]:,} contributions from {data["days"][0]["date"]} to {data["days"][-1]["date"]}.</p>' + calendar(data['days']) + calendar(data['days'], True) + '<div class="activity-legend"><span class="year-label">Past 12 months</span><span class="mobile-label">Latest 26 weeks</span><span>less <i class="tone-0"></i><i class="tone-1"></i><i class="tone-2"></i><i class="tone-3"></i><i class="tone-4"></i> more</span></div>' + '<dl class="activity-metrics">' + ''.join(f'<div><dd>{value:,}</dd><dt>{label}</dt></div>' for label, value in [('contributions<span>past 12 months</span>', data['annual_total']), ('repositories<span>public + private</span>', data['repositories']), ('stars<span>received</span>', data['stars'])]) + '</dl></section>'
+        return head + '<p class="activity-unavailable">activity unavailable</p><p class="activity-note">a little more of my work lives on GitHub.</p></section>'
+    return head + f'<p class="sr-only">{data["annual_total"]:,} contributions from {data["days"][0]["date"]} to {data["days"][-1]["date"]}.</p>' + calendar(data['days']) + calendar(data['days'], True) + '<div class="activity-legend"><span class="year-label">past 12 months</span><span class="mobile-label">latest 26 weeks</span><span>less <i class="tone-0"></i><i class="tone-1"></i><i class="tone-2"></i><i class="tone-3"></i><i class="tone-4"></i> more</span></div>' + '<dl class="activity-metrics">' + ''.join(f'<div><dt>{label}</dt><dd>{value:,}</dd></div>' for label, value in [('contributions<span>past 12 months</span>', data['annual_total']), ('repositories<span>public + private</span>', data['repositories']), ('stars<span>received</span>', data['stars'])]) + f'</dl><p class="activity-note">snapshot through <time datetime="{data["days"][-1]["date"]}">{data["days"][-1]["date"]}</time></p></section>'
