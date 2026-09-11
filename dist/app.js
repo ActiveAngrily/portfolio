@@ -5,7 +5,7 @@ const updateClock = () => {
   const now = new Date();
   $('date').textContent = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
   $('clock').textContent = now.toLocaleTimeString('en-GB');
-  $('year').textContent = now.getFullYear();
+  if ($('year')) $('year').textContent = now.getFullYear();
 };
 updateClock();
 setInterval(updateClock, 1000);

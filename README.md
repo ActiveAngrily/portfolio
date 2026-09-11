@@ -1,6 +1,6 @@
 # Portfolio
 
-A small, reference-inspired portfolio for Anant Jamuar, with a warm two-column layout, project pages, and a focus timer experiment. The left stage is intentionally empty so a future interactive element can have room to breathe.
+A small, reference-inspired portfolio for Anant Jamuar, with a warm two-column layout, project pages, and a focus timer experiment. The left stage pairs GitHub activity with reserved space for a future interactive element.
 
 ## Future plan: interactive square
 
@@ -32,3 +32,47 @@ The next playful feature will be a tiny animated square that visitors can move, 
 - The feature is lazy-loaded so the portfolio remains fast when the square is ignored.
 
 No interactive square is implemented yet; this document is the handoff plan for that future pass.
+
+## Project pages and GitHub activity
+
+The shared left stage now holds a quiet GitHub activity card above the reserved
+square playground, with the date and clock below. The desktop split stays 55/45;
+intermediate screens use 46/54, and mobile stacks the stage above the story.
+DM Sans, italic Instrument Serif, pale surfaces, and charcoal text carry through
+all pages. The card uses five stone-to-olive contribution levels, month markers,
+and annual contributions, public and private repository count, and stars received.
+Mobile shows the latest 26 weeks while retaining the annual total.
+
+The four case studies use the same editorial structure: back link, category,
+title, introduction, role/dates and focus, project link or status, a specific
+visual, evidence, problem, engineering decisions, reflection, and next project.
+
+- `/work/red-letter/`: a newspaper masthead and discovery-to-report pipeline in
+  muted oxblood; 22 publishers, 46 entry points, and 8 personas.
+- `/work/crucible/`: an explicitly illustrative telemetry trace, 50-step window,
+  and three labelled risk levels in amber; 11 signals and under-15ms inference.
+- `/work/curieon/`: abstract record IDs in an illustrative severity queue in
+  blue-grey. “In progress” stays visible; no patient data or clinical results.
+- `/work/latent-diffusion/`: a short research abstract and the tools used to build
+  the latent diffusion pipeline.
+
+### Build and data
+
+Run `python3 build_pages.py` to refresh activity and regenerate detail pages.
+Supply `GH_TOKEN` or `GITHUB_TOKEN` through your build environment's secret store;
+do not put credentials in source files. For local builds, you can instead put only the token in `.github-token` at the repository root. This file is Git-ignored; environment variables take precedence. The build queries GitHub GraphQL for the
+account's contribution calendar and paginates all owned REST repositories.
+Repository count includes public and private forks; stars received excludes forks.
+Use a token for `ActiveAngrily` with private-repository read access so private
+activity is included.
+
+`dist/github-activity.json` stores only aggregate counts, the contribution calendar, and the original
+fetch timestamp. The site makes no client-side GitHub requests. Failed refreshes
+preserve a valid snapshot; without one, the card says “Activity unavailable” and
+links to the profile. Refresh occurs on builds, not on a daily schedule.
+
+Run `python3 test_github_activity.py` and `node check.mjs` for data and generated
+page checks. Browser acceptance covers 375px, 768px, 1440px, short desktop heights,
+keyboard focus, reduced motion, both activity states, and diagram overflow.
+
+The interactive square and conversation remain future work under the plan above.
